@@ -16,7 +16,7 @@ button:hover{background:#cc9900}.error{color:red}
 #app{display:none;padding:25px}
 .header{background:white;border-radius:25px;padding:20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 30px #0003}
 .header-title{display:flex;align-items:center;gap:15px;direction:ltr}
-.profile-image{width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid #008f83;box-shadow:0 4px 10px #0003;display:block}
+.profile-image{width:58px;height:58px;border-radius:50%;object-fit:cover;object-position:center center;border:3px solid #008f83;box-shadow:0 4px 10px #0003;display:block}
 .header h1{color:#008f83;margin:0}
 .container{display:grid;grid-template-columns:350px 1fr;gap:20px;margin-top:25px}
 .card{background:white;padding:25px;border-radius:25px;box-shadow:0 10px 25px #0003}
@@ -39,7 +39,10 @@ button:hover{background:#cc9900}.error{color:red}
 <div id="app">
 <div class="header">
 <div class="header-title">
-<img class="profile-image" src="https://raw.githubusercontent.com/stars1392/star-dictionary/main/2013%20%282%29.jpg" alt="Profile" onerror="this.style.display='none'">
+<div class="profile-group">
+<img class="profile-image" src="https://raw.githubusercontent.com/stars1392/star-dictionary/main/2013%20%282%29.jpg" alt="Profile 1" onerror="this.style.display='none'">
+<img class="profile-image" src="https://raw.githubusercontent.com/stars1392/star-dictionary/refs/heads/main/d2bfc5ab-e07e-469c-b394-388fe37dfec3.jpg" alt="Profile 2" onerror="this.style.display='none'">
+</div>
 <h1>📖 Star Dictionary</h1>
 </div><button onclick="logout()">Quit</button>
 </div>
@@ -50,14 +53,8 @@ button:hover{background:#cc9900}.error{color:red}
 <script>
 const savedDictionary=JSON.parse(localStorage.getItem("dictionary")||"null");
 let dictionary=savedDictionary||[{word:"book",meanings:["کتاب","دفتر"],date:1},{word:"computer",meanings:["کامپیوتر","رایانه"],date:2},{word:"football",meanings:["فوتبال"],date:3}];
-
-dictionary=dictionary.map(item=>({
- word:String(item.word||"").trim(),
- meanings:[...new Set((Array.isArray(item.meanings)?item.meanings:[item.meanings||""]).flatMap(m=>String(m).split(/[,،]/).map(x=>x.trim()).filter(Boolean)))],
- date:item.date||Date.now()
-}));
+dictionary=dictionary.map(item=>({word:String(item.word||"").trim(),meanings:[...new Set((Array.isArray(item.meanings)?item.meanings:[item.meanings||""]).flatMap(m=>String(m).split(/[,،]/).map(x=>x.trim()).filter(Boolean)))],date:item.date||Date.now()}));
 localStorage.setItem("dictionary",JSON.stringify(dictionary));
-
 function login(){let pass=document.getElementById("password").value;if(pass==="stars1392"){document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";showWords()}else document.getElementById("error").innerHTML="password incorrect"}
 function logout(){location.reload()}
 function save(){localStorage.setItem("dictionary",JSON.stringify(dictionary))}
