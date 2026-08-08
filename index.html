@@ -7,72 +7,50 @@
 <body>
 <div class="login-page" id="login"><div class="login-box"><div class="logo">📚</div><h1>Star Dictionary</h1><p>Enter Dictionary</p><input id="password" type="password" placeholder="password" onkeydown="if(event.key==='Enter')login()"><button onclick="login()">Enter</button><p class="error" id="error"></p></div></div>
 <div id="app"><div class="header"><div class="header-title"><div class="profile-group"><img class="profile-image" src="https://raw.githubusercontent.com/stars1392/star-dictionary/main/2013%20%282%29.jpg" onerror="this.style.display='none'"><img class="profile-image" src="https://raw.githubusercontent.com/stars1392/star-dictionary/refs/heads/main/d2bfc5ab-e07e-469c-b394-388fe37dfec3.jpg" onerror="this.style.display='none'"></div><h1>📖 Star Dictionary</h1></div><button onclick="logout()">Quit</button></div>
-<div class="container"><div class="card"><h2>➕ Add word</h2><input id="word" placeholder="English" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('meaning').focus()}"><input id="meaning" placeholder="Meaning" onkeydown="if(event.key==='Enter'){event.preventDefault();addWord()}"><button onclick="addWord()">Add</button><div id="syncStatus" class="sync-status"></div></div><div class="card"><h2>🔍 search</h2><input id="search" placeholder="search ..." oninput="searchWord()"><select id="sort" onchange="sortWords()"><option value="custom">Custom order</option><option value="alpha">A to Z</option><option value="new">Date modified</option></select><div id="list"></div></div></div></div>
+<div class="container"><div class="card"><h2>➕ Add word</h2><input id="word" placeholder="English" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('meaning').focus()}"><input id="meaning" placeholder="Meaning" onkeydown="if(event.key==='Enter'){event.preventDefault();addWord()}"><button onclick="addWord()">Add</button><div id="syncStatus" class="sync-status"></div></div><div class="card"><h2>🔍 search</h2><input id="search" placeholder="search ..." oninput="searchWord()"><select id="sort" onchange="sortWords()"><option value="custom">Custom order</option><option value="alpha">A to Z</option><option value="new">Date added</option></select><div id="list"></div></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL="https://cbaetwvmgfvyibzkwznb.supabase.co";const SUPABASE_KEY="sb_publishable_hdoHhkqy-GMXC2wzjXdiaA_XSObSmTX";const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let dictionary=[];
 let localWords=JSON.parse(localStorage.getItem("dictionary")||"[]");
-function normalize(x){return{id:x.id,word:String(x.word||"").trim(),meanings:[...new Set((Array.isArray(x.meanings)?x.meanings:[x.meanings||""]).flatMap(m=>String(m).split(/[,،]/).map(v=>v.trim()).filter(Boolean)))],date:Number(x.date)||Date.now(),modified_at:x.modified_at||null}}
+function normalize(x){return{id:x.id,word:String(x.word||"").trim(),meanings:[...new Set((Array.isArray(x.meanings)?x.meanings:[x.meanings||""]).flatMap(m=>String(m).split(/[,،]/).map(v=>v.trim()).filter(Boolean)))],date:Number(x.date)||Date.now()}}
 function setStatus(message,type){const el=document.getElementById("syncStatus");el.textContent=message;el.className="sync-status "+(type==="error"?"sync-error":"sync-ok");el.style.display="block"}
 async function loadWords(){
   setStatus("Connecting to cloud...","ok");
-  const result=await supabaseClient.from("dictionary").select("id,word,meanings,date,modified_at");
+  const result=await supabaseClient.from("dictionary").select("id,word,meanings,date");
   if(result.error){
-    console.error(result.error);
-    dictionary=[];showWords();
-    setStatus("Cloud sync error: "+result.error.message,"error");
-    return;
+    console.error(result.error);dictionary=[];showWords();setStatus("Cloud sync error: "+result.error.message,"error");return;
   }
   let cloudWords=(result.data||[]).map(normalize).sort((a,b)=>a.date-b.date);
   if(cloudWords.length===0 && localWords.length>0){
     setStatus("Saving your existing words to the cloud...","ok");
     const clean=localWords.map(normalize).filter(x=>x.word&&x.meanings.length);
     for(const x of clean){
-      const payload={word:x.word,meanings:x.meanings,date:x.date||Date.now(),modified_at:x.modified_at||new Date().toISOString()};
+      const payload={word:x.word,meanings:x.meanings,date:x.date||Date.now()};
       const ins=await supabaseClient.from("dictionary").insert(payload);
-      if(ins.error){
-        console.error(ins.error);
-        dictionary=[];showWords();
-        setStatus("Could not save to Supabase: "+ins.error.message,"error");
-        return;
-      }
+      if(ins.error){console.error(ins.error);dictionary=[];showWords();setStatus("Could not save to Supabase: "+ins.error.message,"error");return;}
     }
-    const again=await supabaseClient.from("dictionary").select("id,word,meanings,date,modified_at");
+    const again=await supabaseClient.from("dictionary").select("id,word,meanings,date");
     if(again.error){setStatus("Cloud verification error: "+again.error.message,"error");return;}
-    cloudWords=(again.data||[]).map(normalize).sort((a,b)=>a.date-b.date);
-    setStatus("✓ Your existing words were synced to Supabase.","ok");
-  } else {
-    setStatus("✓ Synced with Supabase — "+cloudWords.length+" words","ok");
-  }
-  dictionary=cloudWords;
-  localStorage.setItem("dictionary",JSON.stringify(dictionary));
-  localWords=dictionary.slice();
-  showWords();
+    cloudWords=(again.data||[]).map(normalize).sort((a,b)=>a.date-b.date);setStatus("✓ Your existing words were synced to Supabase.","ok");
+  }else setStatus("✓ Synced with Supabase — "+cloudWords.length+" words","ok");
+  dictionary=cloudWords;localStorage.setItem("dictionary",JSON.stringify(dictionary));localWords=dictionary.slice();showWords();
 }
 async function login(){if(document.getElementById("password").value==="stars1392"){document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";await loadWords()}else document.getElementById("error").innerHTML="password incorrect"}
 function logout(){location.reload()}
 async function addWord(){
-  let word=document.getElementById("word").value.trim(),meaning=document.getElementById("meaning").value.trim();
-  if(!word||!meaning){alert("Enter word and meaning");return}
+  let word=document.getElementById("word").value.trim(),meaning=document.getElementById("meaning").value.trim();if(!word||!meaning){alert("Enter word and meaning");return}
   let meanings=meaning.split(/[,،]/).map(m=>m.trim()).filter(Boolean),old=dictionary.find(x=>x.word.toLowerCase()===word.toLowerCase());
-  if(old){
-    let merged=[...new Set([...old.meanings,...meanings])];
-    let r=await supabaseClient.from("dictionary").update({meanings:merged,modified_at:new Date().toISOString()}).eq("id",old.id);
-    if(r.error){alert("Supabase error: "+r.error.message);return}
-  }else{
-    let lastDate=dictionary.length?Math.max(...dictionary.map(x=>x.date||0)):0,newDate=Math.max(Date.now(),lastDate+1);
-    let r=await supabaseClient.from("dictionary").insert({word,meanings:[...new Set(meanings)],date:newDate,modified_at:new Date().toISOString()}).select("id,word,meanings,date,modified_at").single();
-    if(r.error){alert("Supabase error: "+r.error.message);return}
-  }
+  if(old){let merged=[...new Set([...old.meanings,...meanings])];let r=await supabaseClient.from("dictionary").update({meanings:merged}).eq("id",old.id);if(r.error){alert("Supabase error: "+r.error.message);return}}
+  else{let lastDate=dictionary.length?Math.max(...dictionary.map(x=>x.date||0)):0,newDate=Math.max(Date.now(),lastDate+1);let r=await supabaseClient.from("dictionary").insert({word,meanings:[...new Set(meanings)],date:newDate}).select("id,word,meanings,date").single();if(r.error){alert("Supabase error: "+r.error.message);return}}
   document.getElementById("word").value="";document.getElementById("meaning").value="";await loadWords();document.getElementById("word").focus()
 }
 function showWords(data=dictionary){let list=document.getElementById("list");list.innerHTML="";if(!data.length){list.innerHTML='<div class="empty">No results found</div>';return}data.forEach(item=>{let i=dictionary.indexOf(item),tags=item.meanings.map(m=>`<button type="button" class="meaning-tag" data-meaning="${escapeAttr(m)}" onclick="searchMeaning(this.dataset.meaning)">${escapeHtml(m)}</button>`).join(""),up=i>0,down=i<dictionary.length-1;list.innerHTML+=`<div class="word"><div class="word-content"><h3>${i+1} - ${escapeHtml(item.word)}</h3><div class="meanings">${tags}</div><div class="word-actions"><button onclick="editWord(${i})">✏️ edit</button><button onclick="deleteWord(${i})">🗑 Delete</button><div class="order-controls"><button class="move-btn" ${up?"":"disabled"} onclick="moveWord(${i},-1)">▲</button><button class="move-btn" ${down?"":"disabled"} onclick="moveWord(${i},1)">▼</button></div></div></div></div>`})}
 function searchMeaning(m){document.getElementById("search").value=m.trim();searchWord();document.getElementById("search").focus()}
 function searchWord(){let t=document.getElementById("search").value.trim().toLowerCase();showWords(!t?dictionary:dictionary.filter((x,i)=>String(i+1)===t||x.word.toLowerCase().includes(t)||x.meanings.some(m=>m.toLowerCase().includes(t))))}
 async function deleteWord(i){if(!confirm("Delete?"))return;let r=await supabaseClient.from("dictionary").delete().eq("id",dictionary[i].id);if(r.error){alert(r.error.message);return}await loadWords()}
-async function editWord(i){let item=dictionary[i],nw=prompt("New word name:",item.word);if(nw===null)return;let nm=prompt("Separate the meanings with comma:",item.meanings.join(", "));if(nm===null)return;let meanings=nm.split(/[,،]/).map(m=>m.trim()).filter(Boolean),r=await supabaseClient.from("dictionary").update({word:nw.trim(),meanings:[...new Set(meanings)],modified_at:new Date().toISOString()}).eq("id",item.id);if(r.error){alert(r.error.message);return}await loadWords()}
-function sortWords(){let t=document.getElementById("sort").value;if(t==="alpha")dictionary.sort((a,b)=>a.word.localeCompare(b.word));else if(t==="new")dictionary.sort((a,b)=>new Date(b.modified_at||0)-new Date(a.modified_at||0));else dictionary.sort((a,b)=>a.date-b.date);showWords()}
+async function editWord(i){let item=dictionary[i],nw=prompt("New word name:",item.word);if(nw===null)return;let nm=prompt("Separate the meanings with comma:",item.meanings.join(", "));if(nm===null)return;let meanings=nm.split(/[,،]/).map(m=>m.trim()).filter(Boolean),r=await supabaseClient.from("dictionary").update({word:nw.trim(),meanings:[...new Set(meanings)]}).eq("id",item.id);if(r.error){alert(r.error.message);return}await loadWords()}
+function sortWords(){let t=document.getElementById("sort").value;if(t==="alpha")dictionary.sort((a,b)=>a.word.localeCompare(b.word));else if(t==="new")dictionary.sort((a,b)=>b.date-a.date);else dictionary.sort((a,b)=>a.date-b.date);showWords()}
 async function moveWord(i,d){let j=i+d;if(j<0||j>=dictionary.length)return;let a=dictionary[i],b=dictionary[j],temp=a.date;a.date=b.date;b.date=temp;let r1=await supabaseClient.from("dictionary").update({date:a.date}).eq("id",a.id),r2=await supabaseClient.from("dictionary").update({date:b.date}).eq("id",b.id);if(r1.error||r2.error){alert((r1.error||r2.error).message);await loadWords();return}dictionary.sort((x,y)=>x.date-y.date);document.getElementById("sort").value="custom";await loadWords()}
 function escapeHtml(t){let d=document.createElement("div");d.textContent=t;return d.innerHTML}function escapeAttr(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 </script></body></html>
