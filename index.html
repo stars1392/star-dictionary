@@ -5,16 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Star Dictionary</title>
 <style>
-*{box-sizing:border-box;font-family:Tahoma,Arial,sans-serif}
-body{margin:0;min-height:100vh;background:linear-gradient(135deg,#f9d423,#ffcc00);color:#333}
+*{box-sizing:border-box;font-family:Tahoma,Arial}
+body{margin:0;min-height:100vh;background:linear-gradient(135deg,#f9d423,#ffcc00)}
 .login-page{height:100vh;display:flex;justify-content:center;align-items:center}
 .login-box{background:white;width:360px;padding:35px;border-radius:25px;text-align:center;box-shadow:0 20px 40px #0005}
 .logo{font-size:55px}.login-box h1{color:#d89b00}
-input,select{width:100%;padding:13px;margin:7px 0;border-radius:12px;border:1px solid #ddd;font-size:16px;outline:none;transition:.2s}
-input:focus,select:focus{border-color:#008f83;box-shadow:0 0 0 3px #008f8320}
+input,select{width:100%;padding:13px;margin:7px 0;border-radius:12px;border:1px solid #ddd;font-size:16px}
 button{padding:11px 20px;border:0;border-radius:12px;background:#008f83;color:white;cursor:pointer;transition:.3s}
-button:hover{background:#cc9900;transform:translateY(-1px)}
-.error{color:red}
+button:hover{background:#cc9900}.error{color:red}
 #app{display:none;padding:25px}
 .header{background:white;border-radius:25px;padding:20px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 30px #0003}
 .header-title{display:flex;align-items:center;gap:15px;direction:ltr}
@@ -22,161 +20,46 @@ button:hover{background:#cc9900;transform:translateY(-1px)}
 .header h1{color:#008f83;margin:0}
 .container{display:grid;grid-template-columns:350px 1fr;gap:20px;margin-top:25px}
 .card{background:white;padding:25px;border-radius:25px;box-shadow:0 10px 25px #0003}
-.word{background:#f5f6ff;padding:15px;border-radius:15px;margin:12px 0;border-right:4px solid #008f83}
-.word h3{color:#008f83;margin-top:0}
+.word{background:#f5f6ff;padding:15px;border-radius:15px;margin:12px 0}.word h3{color:#008f83}
 .meanings{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.meaning-tag{padding:7px 12px;border:0;border-radius:20px;background:#008f83;color:white;font-size:13px;cursor:pointer;transition:.2s}
-.meaning-tag:hover{background:#006f67;transform:translateY(-1px)}
-.word-actions{display:flex;gap:7px;margin-top:12px}
+.meaning-tag{display:inline-flex;align-items:center;padding:7px 12px;border:0;border-radius:999px;background:#008f83;color:white;font-size:14px;cursor:pointer;transition:.2s}
+.meaning-tag:hover{background:#cc9900;transform:translateY(-1px)}
 .word button{font-size:12px;padding:7px 12px}
-.empty{padding:20px;text-align:center;color:#777}
-.search-info{font-size:13px;color:#777;margin:5px 0 12px}
-@media(max-width:800px){#app{padding:12px}.container{grid-template-columns:1fr}.header{padding:15px}.header h1{font-size:20px}.profile-image{width:50px;height:50px}}
+.empty{color:#777;text-align:center;padding:20px}
+@media(max-width:800px){.container{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="login-page" id="login">
 <div class="login-box">
-<div class="logo">📚</div>
-<h1>Star Dictionary</h1>
-<p>Enter Dictionary</p>
+<div class="logo">📚</div><h1>Star Dictionary</h1><p>Enter Dictionary</p>
 <input id="password" type="password" placeholder="password" onkeydown="if(event.key==='Enter') login()">
-<button onclick="login()">Enter</button>
-<p class="error" id="error"></p>
-</div>
-</div>
-
+<button onclick="login()">Enter</button><p class="error" id="error"></p>
+</div></div>
 <div id="app">
 <div class="header">
 <div class="header-title">
 <img class="profile-image" src="https://github.com/stars1392/star-dictionary/blob/main/2013%20(2).jpg?raw=true" alt="Profile">
 <h1>📖 Star Dictionary</h1>
+</div><button onclick="logout()">Quit</button>
 </div>
-<button onclick="logout()">Quit</button>
-</div>
-
 <div class="container">
-<div class="card">
-<h2>➕ Add word</h2>
-<input id="word" placeholder="English">
-<input id="meaning" placeholder="Meaning">
-<button onclick="addWord()">Add</button>
-</div>
-
-<div class="card">
-<h2>🔍 Search</h2>
-<input id="search" placeholder="Search ..." oninput="searchWord()">
-<div class="search-info" id="searchInfo"></div>
-<select id="sort" onchange="sortWords()">
-<option value="alpha">A to Z</option>
-<option value="new">Date modified</option>
-</select>
-<div id="list"></div>
-</div>
-</div>
-</div>
-
+<div class="card"><h2>➕ Add word</h2><input id="word" placeholder="English"><input id="meaning" placeholder="Meaning"><button onclick="addWord()">Add</button></div>
+<div class="card"><h2>🔍 search</h2><input id="search" placeholder="search ..." oninput="searchWord()"><select id="sort" onchange="sortWords()"><option value="alpha">A to Z</option><option value="new">Date modified</option></select><div id="list"></div></div>
+</div></div>
 <script>
-let dictionary=JSON.parse(localStorage.getItem("dictionary"))||[
-{word:"book",meanings:["کتاب","دفتر"],date:1},
-{word:"computer",meanings:["کامپیوتر","رایانه"],date:2},
-{word:"football",meanings:["فوتبال"],date:3}
-];
-
-function login(){
-let pass=document.getElementById("password").value;
-if(pass==="stars1392"){
-document.getElementById("login").style.display="none";
-document.getElementById("app").style.display="block";
-showWords();
-}else document.getElementById("error").innerHTML="password incorrect";
-}
-
+let dictionary=JSON.parse(localStorage.getItem("dictionary"))||[{word:"book",meanings:["کتاب","دفتر"],date:1},{word:"computer",meanings:["کامپیوتر","رایانه"],date:2},{word:"football",meanings:["فوتبال"],date:3}];
+function login(){let pass=document.getElementById("password").value;if(pass==="stars1392"){document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";showWords()}else document.getElementById("error").innerHTML="password incorrect"}
 function logout(){location.reload()}
 function save(){localStorage.setItem("dictionary",JSON.stringify(dictionary))}
-
-function addWord(){
-let word=document.getElementById("word").value.trim();
-let meaning=document.getElementById("meaning").value.trim();
-if(word===""||meaning===""){alert("Enter word and meaning");return}
-let old=dictionary.find(x=>x.word.toLowerCase()===word.toLowerCase());
-if(old){
-if(!old.meanings.some(m=>m.toLowerCase()===meaning.toLowerCase())) old.meanings.push(meaning);
-old.date=Date.now();
-}else dictionary.push({word:word,meanings:[meaning],date:Date.now()});
-save();showWords();
-document.getElementById("word").value="";
-document.getElementById("meaning").value="";
-}
-
-function escapeHtml(text){
-return String(text).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
-}
-
-function showWords(data=dictionary){
-let list=document.getElementById("list");
-list.innerHTML="";
-document.getElementById("searchInfo").textContent=data.length+" word(s) found";
-if(data.length===0){list.innerHTML='<div class="empty">No words found.</div>';return}
-
-data.forEach(item=>{
-let wordKey=encodeURIComponent(item.word);
-let tags=item.meanings.map(meaning=>`<button class="meaning-tag" onclick="searchMeaning('${encodeURIComponent(meaning)}')">${escapeHtml(meaning)}</button>`).join("");
-list.innerHTML+=`<div class="word">
-<h3>${escapeHtml(item.word)}</h3>
-<div class="meanings">${tags}</div>
-<div class="word-actions">
-<button onclick="editWord('${wordKey}')">✏️ edit</button>
-<button onclick="deleteWord('${wordKey}')">🗑 Delete</button>
-</div>
-</div>`;
-});
-}
-
-function searchWord(){
-let text=document.getElementById("search").value.trim().toLowerCase();
-if(text===""){showWords();return}
-let result=dictionary.filter(item=>item.word.toLowerCase().includes(text)||item.meanings.some(m=>m.toLowerCase().includes(text)));
-showWords(result);
-}
-
-function searchMeaning(encodedMeaning){
-let meaning=decodeURIComponent(encodedMeaning);
-document.getElementById("search").value=meaning;
-let result=dictionary.filter(item=>item.meanings.some(m=>m.toLowerCase().includes(meaning.toLowerCase()))||item.word.toLowerCase().includes(meaning.toLowerCase()));
-showWords(result);
-document.getElementById("search").focus();
-}
-
-function deleteWord(encodedWord){
-let word=decodeURIComponent(encodedWord);
-if(confirm("Delete this word?")){
-dictionary=dictionary.filter(item=>item.word!==word);
-save();showWords();
-}
-}
-
-function editWord(encodedWord){
-let word=decodeURIComponent(encodedWord);
-let index=dictionary.findIndex(item=>item.word===word);
-if(index===-1)return;
-let item=dictionary[index];
-let newWord=prompt("New word name:",item.word);
-if(!newWord)return;
-let newMeanings=prompt("Separate the meanings with , :",item.meanings.join(","));
-if(newMeanings===null)return;
-let meanings=newMeanings.split(",").map(x=>x.trim()).filter(Boolean);
-if(meanings.length===0){alert("Enter at least one meaning");return}
-dictionary[index]={word:newWord.trim(),meanings:[...new Set(meanings)],date:Date.now()};
-save();showWords();
-}
-
-function sortWords(){
-let type=document.getElementById("sort").value;
-if(type==="alpha")dictionary.sort((a,b)=>a.word.localeCompare(b.word));
-else dictionary.sort((a,b)=>b.date-a.date);
-searchWord();
-}
+function addWord(){let word=document.getElementById("word").value.trim(),meaning=document.getElementById("meaning").value.trim();if(word===""||meaning===""){alert("Enter word and meaning");return}let old=dictionary.find(x=>x.word.toLowerCase()===word.toLowerCase());if(old){if(!old.meanings.some(m=>m.trim().toLowerCase()===meaning.toLowerCase()))old.meanings.push(meaning)}else dictionary.push({word:word,meanings:[meaning],date:Date.now()});save();showWords();document.getElementById("word").value="";document.getElementById("meaning").value=""}
+function showWords(data=dictionary){let list=document.getElementById("list");list.innerHTML="";if(!data.length){list.innerHTML='<div class="empty">No results found</div>';return}data.forEach(item=>{let originalIndex=dictionary.indexOf(item);let tags=item.meanings.map(meaning=>`<button class="meaning-tag" onclick="searchMeaning(${JSON.stringify(meaning)})">${escapeHtml(meaning.trim())}</button>`).join("");list.innerHTML+=`<div class="word"><h3>${originalIndex+1} - ${escapeHtml(item.word)}</h3><div class="meanings">${tags}</div><button onclick="editWord(${originalIndex})">✏️ edit</button><button onclick="deleteWord(${originalIndex})">🗑 Delete</button></div>`})}
+function searchMeaning(meaning){document.getElementById("search").value=meaning;let text=meaning.trim().toLowerCase();showWords(dictionary.filter(item=>item.meanings.some(m=>m.trim().toLowerCase()===text)||item.word.toLowerCase().includes(text)))}
+function searchWord(){let text=document.getElementById("search").value.trim().toLowerCase();showWords(dictionary.filter(item=>item.word.toLowerCase().includes(text)||item.meanings.some(m=>m.toLowerCase().includes(text))))}
+function deleteWord(index){if(confirm("Delete?")){dictionary.splice(index,1);save();showWords()}}
+function editWord(index){let item=dictionary[index],newWord=prompt("New word name:",item.word);if(newWord){let newMeanings=prompt("Separate the meanings with comma:",item.meanings.join(","));if(newMeanings===null)return;let meanings=newMeanings.split(",").map(m=>m.trim()).filter(Boolean);dictionary[index]={word:newWord.trim(),meanings:[...new Set(meanings)],date:Date.now()};save();showWords()}}
+function sortWords(){let type=document.getElementById("sort").value;if(type==="alpha")dictionary.sort((a,b)=>a.word.localeCompare(b.word));else dictionary.sort((a,b)=>b.date-a.date);showWords()}
+function escapeHtml(text){let div=document.createElement("div");div.textContent=text;return div.innerHTML}
 </script>
 </body>
 </html>
