@@ -1,0 +1,67 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Prepare web assets
+        run: |
+          mkdir -p www
+          cp index.html www/index.html
+
+      - name: Create package.json
+        run: |
+          cat > package.json <<'EOF'
+          {
+            "name": "star-dictionary-android",
+            "version": "1.0.0",
+            "private": true,
+            "scripts": {
+              "build": "mkdir -p www && cp index.html www/index.html"
+            },
+            "dependencies": {
+              "@capacitor/core": "^7.4.0",
+              "@capacitor/android": "^7.4.0",
+              "@capacitor/cli": "^7.4.0"
+            }
+          }
+          EOF
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create Capacitor project
+        run: |
+          rm -rf android
+          npx cap init "Star Dictionary" "com.stars1392.stardictionary" --web-dir www
+          npx cap add android
+          npx cap sync android
+
+      - name: Build Debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: star-dictionary-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
