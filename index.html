@@ -32,4 +32,5 @@ async function moveWord(i,d){let j=i+d;if(j<0||j>=dictionary.length)return;let a
 function toggleTheme(){document.body.classList.toggle("dark");let dark=document.body.classList.contains("dark");localStorage.setItem("theme",dark?"dark":"light");document.getElementById("themeBtn").textContent=dark?"☀️":"🌙"}function initTheme(){if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark");document.getElementById("themeBtn").textContent="☀️"}}
 function escapeHtml(t){let d=document.createElement("div");d.textContent=t;return d.innerHTML}function escapeAttr(t){return String(t).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}initTheme();
 </script><script src="./access-mode.js"></script><script src="./dictionary-fix.js?v=2"></script>
+<script src="./star-dictionary-plus.js?v=1"></script>
 </body></html>
