@@ -35,22 +35,24 @@
     document.getElementById('guestMode').style.opacity = m === 'guest' ? '1' : '.55';
   };
 
-  function enterGuest() {
+  async function enterGuest() {
     sessionStorage.setItem('star_access_mode','guest');
     loginPage.style.display='none'; app.style.display='block';
     document.body.classList.add('guest-mode');
+    setMode('guest');
+    if (typeof loadWords === 'function') await loadWords();
     lockEditing();
-    if (typeof render === 'function') render();
   }
 
-  function enterPassword() {
+  async function enterPassword() {
     const v = document.getElementById('accessPassword').value;
     if (v !== PASSWORD) { error.textContent='رمز ورود اشتباه است.'; return; }
     sessionStorage.setItem('star_access_mode','owner');
     loginPage.style.display='none'; app.style.display='block';
     document.body.classList.remove('guest-mode');
+    if (typeof loadWords === 'function') await loadWords();
     unlockEditing();
-    if (typeof render === 'function') render();
+    const w=document.getElementById('word'); if(w) w.focus();
   }
 
   function lockEditing(){
@@ -66,13 +68,11 @@
   }
 
   document.getElementById('passwordMode').onclick=()=>setMode('password');
-  document.getElementById('guestMode').onclick=()=>{setMode('guest');enterGuest();};
+  document.getElementById('guestMode').onclick=()=>enterGuest();
   document.getElementById('accessEnter').onclick=enterPassword;
   document.getElementById('accessPassword').addEventListener('keydown',e=>{if(e.key==='Enter')enterPassword();});
 
-  // Override the old password login so the legacy login button cannot bypass the new access screen.
   window.login = () => { setMode('password'); passArea.style.display='block'; document.getElementById('accessPassword').focus(); };
 
-  // If a guest refreshes the page, keep guest mode until they quit.
   if(sessionStorage.getItem('star_access_mode') === 'guest') enterGuest();
 })();
