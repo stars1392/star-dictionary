@@ -1,13 +1,13 @@
 (() => {
   const polish = document.createElement('style');
   polish.textContent = `
-    body{font-family:'Vazirmatn',Tahoma,Arial,sans-serif!important}
+    html,body,body *{font-family:'Vazirmatn',Tahoma,Arial,sans-serif!important}
     .profile-group img:nth-child(2){display:none!important}
     .login-box{padding:42px 38px!important;border-radius:34px!important;box-shadow:0 28px 80px #164e4a22!important}
     .login-box .logo{font-size:72px!important}
     .login-box h1{font-family:'Vazirmatn',Tahoma,sans-serif!important;font-size:31px!important;font-weight:800!important;letter-spacing:-.5px}
     .login-box>p{font-family:'Vazirmatn',Tahoma,sans-serif!important;line-height:1.9}
-    .login-box #accessPassword{height:52px!important;border-radius:16px!important;font-family:Arial,sans-serif!important}
+    .login-box input,.login-box select,.login-box button,.login-box #accessPassword{font-family:'Vazirmatn',Tahoma,Arial,sans-serif!important;height:52px!important;border-radius:16px!important;font-family:Arial,sans-serif!important}
     .login-box button{height:52px!important;border-radius:16px!important;font-size:14px!important}
     .login-box>div:first-of-type{margin-top:20px!important}
     .guest-mode .container{display:block!important;max-width:920px!important;margin:0 auto!important}
