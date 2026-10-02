@@ -9,15 +9,15 @@
 
   const modeWrap = document.createElement('div');
   modeWrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0 10px';
-  modeWrap.innerHTML='<button type="button" id="passwordMode">🔐 ورود با رمز</button><button type="button" id="guestBtn" style="background:linear-gradient(135deg,#475569,#64748b)">👤 ورود مهمان</button>';
+  modeWrap.innerHTML='<button type="button" id="passwordMode">🔐 Login with Password</button><button type="button" id="guestBtn" style="background:linear-gradient(135deg,#475569,#64748b)">👤 Guest Login</button>';
   oldInput?.remove(); oldButton?.remove(); box.insertBefore(modeWrap,error);
 
   const passArea=document.createElement('div');
-  passArea.innerHTML='<input id="accessPassword" type="password" placeholder="رمز ورود" autocomplete="current-password"><button id="accessEnter" type="button" style="width:100%;margin-top:8px">ورود به دیکشنری</button>';
+  passArea.innerHTML='<input id="accessPassword" type="password" placeholder="Password" autocomplete="current-password"><button id="accessEnter" type="button" style="width:100%;margin-top:8px">Enter Dictionary</button>';
   box.insertBefore(passArea,error);
 
   const guestNotice=document.createElement('p');
-  guestNotice.textContent='حالت مهمان فقط امکان مشاهده و جستجوی کلمات را دارد.';
+  guestNotice.textContent='Guest mode allows viewing and searching words only.';
   guestNotice.style.cssText='font-size:12px;background:var(--soft);padding:10px;border-radius:12px;display:none';
   box.insertBefore(guestNotice,error);
 
@@ -43,7 +43,7 @@
       status.style.display='block';
       const c=document.getElementById('syncCount'); if(c)c.textContent=bad?'⚠️':'✓';
     };
-    setStatus('☁️ در حال دریافت کلمات از Supabase...');
+    setStatus('☁️ Loading words from Supabase...');
     let lastError=null;
     for(let attempt=1;attempt<=3;attempt++){
       try{
@@ -53,7 +53,7 @@
           dictionary=words; localWords=words.slice();
           localStorage.setItem('dictionary',JSON.stringify(words));
           showWords();
-          setStatus('✓ با Supabase همگام شد — '+words.length+' کلمه');
+          setStatus('✓ Synced with Supabase — '+words.length+' کلمه');
           return true;
         }
         lastError=result.error;
@@ -62,7 +62,7 @@
     }
     const cached=JSON.parse(localStorage.getItem('dictionary')||'[]');
     dictionary=cached.map(normalize); localWords=dictionary.slice(); showWords();
-    setStatus('⚠️ خطا در اتصال به Supabase: '+(lastError?.message||'unknown error'),true);
+    setStatus('⚠️ Supabase connection error: '+(lastError?.message||'unknown error'),true);
     return false;
   }
 
@@ -97,7 +97,7 @@
 
   async function enterPassword(){
     if(document.getElementById('accessPassword').value!==PASSWORD){
-      error.textContent='رمز ورود اشتباه است.';
+      error.textContent='Password اشتباه است.';
       return;
     }
     loginPage.style.display='none';
