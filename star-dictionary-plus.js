@@ -23,14 +23,6 @@
     $('sdImport').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.dictionary))throw Error();localStorage.setItem('dictionary',JSON.stringify(d.dictionary));if(Array.isArray(d.favorites))setFav(d.favorites);$('sdPlusMsg').textContent='✅ Restored; refreshing the page...';setTimeout(()=>location.reload(),500)}catch{ $('sdPlusMsg').textContent='❌ Invalid backup file.' }};
   }
 
-  function addLoginModes(){
-    const box=document.querySelector('.login-box');if(!box||$('guestBtn'))return;
-    const enter=box.querySelector('button');if(!enter)return;
-    const wrap=document.createElement('div');wrap.className='login-modes';
-    const guest=document.createElement('button');guest.id='guestBtn';guest.className='secondary-mode';guest.textContent='👤 Continue as Guest';guest.onclick=guestLogin;
-    enter.parentNode.insertBefore(wrap,enter);wrap.appendChild(enter);wrap.appendChild(guest);enter.textContent='🔐 Login with Password';
-    const note=document.createElement('p');note.id='loginNote';note.style.cssText='font-size:12px;color:var(--muted)';note.textContent='Guests can only view and search words.';box.appendChild(note);
-  }
   function setGuestUI(on){
     const add=document.querySelector('.container > .card:first-child'); if(add)add.style.display=on?'none':'';
     document.querySelectorAll('.word-actions button').forEach(b=>b.disabled=on);
@@ -56,6 +48,6 @@
   function wordOfDay(){const list=$('list');if(!list||!window.dictionary?.length)return;const d=new Date();const idx=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%window.dictionary.length;const x=window.dictionary[idx];const box=$('sdWordOfDay');if(box){box.style.display='block';box.innerHTML=`<b>🌟 Word of the Day</b> — <span dir="ltr">${String(x.word).replace(/</g,'&lt;')}</span> <span class="muted">${x.meanings?.join('، ')||''}</span>`}}
   function observe(){const list=$('list');if(!list)return;new MutationObserver(()=>{decorateWords();wordOfDay()}).observe(list,{childList:true,subtree:true});decorateWords();wordOfDay()}
   function shortcuts(){document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key.toLowerCase()==='k'){e.preventDefault();const s=$('search');if(s){s.focus();s.select()}}if(e.key==='Escape'&&document.activeElement===$('search')){if(typeof window.clearSearch==='function')window.clearSearch();else $('search').value='';}})}
-  function boot(){makeModal();addLoginModes();patchLogout();patchTheme();addTools();shortcuts();observe();if(localStorage.getItem(GUEST_KEY)==='1')showAppGuest();}
+  function boot(){makeModal();patchLogout();patchTheme();addTools();shortcuts();observe();if(localStorage.getItem(GUEST_KEY)==='1')showAppGuest();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
