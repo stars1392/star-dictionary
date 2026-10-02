@@ -53,7 +53,7 @@
           dictionary=words; localWords=words.slice();
           localStorage.setItem('dictionary',JSON.stringify(words));
           showWords();
-          setStatus('✓ Synced with Supabase — '+words.length+' کلمه');
+          setStatus('✓ Synced with Supabase — '+words.length+' words');
           return true;
         }
         lastError=result.error;
@@ -92,12 +92,12 @@
     await cloudLoad();
     lockEditing();
     const s=document.getElementById('syncStatus');
-    if(s){s.textContent='👤 حالت مهمان: فقط مشاهده و جستجو';s.className='sync-status sync-ok';s.style.display='block';}
+    if(s){s.textContent='👤 Guest mode: viewing and searching only';s.className='sync-status sync-ok';s.style.display='block';}
   }
 
   async function enterPassword(){
     if(document.getElementById('accessPassword').value!==PASSWORD){
-      error.textContent='Password اشتباه است.';
+      error.textContent='Incorrect password';
       return;
     }
     loginPage.style.display='none';
