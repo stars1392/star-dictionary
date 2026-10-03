@@ -175,6 +175,11 @@
   }
 
   async function enterGuest(){
+    if(window.activeDictionaryTable==='grammar'){
+      document.body.classList.add('guest-mode');
+      showGrammar();
+      return;
+    }
     loginPage.style.display='none';app.style.display='block';document.body.classList.add('guest-mode');
     await cloudLoad();lockEditing();addSwitchButton();
     const s=document.getElementById('syncStatus');
@@ -182,6 +187,11 @@
   }
   async function enterPassword(){
     if(document.getElementById('accessPassword').value!==PASSWORD){error.textContent='Incorrect password';return}
+    if(window.activeDictionaryTable==='grammar'){
+      document.body.classList.remove('guest-mode');
+      showGrammar();
+      return;
+    }
     loginPage.style.display='none';app.style.display='block';document.body.classList.remove('guest-mode');
     await cloudLoad();unlockEditing();addSwitchButton();document.getElementById('word')?.focus();
   }
