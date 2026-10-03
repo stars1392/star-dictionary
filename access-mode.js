@@ -8,6 +8,7 @@
   const normalize=x=>({id:x.id,word:String(x.word||'').trim(),meanings:[...new Set((Array.isArray(x.meanings)?x.meanings:[x.meanings||'']).flatMap(m=>String(m).split(/[,،]/).map(v=>v.trim()).filter(Boolean)))],date:Number(x.date)||Date.now()});
 
   function datasetName(){
+    if(window.activeDictionaryTable === 'grammar') return 'Grammar';
     return window.activeDictionaryTable === 'dictionary_504' ? '504 Words' : 'Basic Words';
   }
   function datasetStorageKey(){
@@ -23,25 +24,63 @@
 
   const grammarData={
     Present:[
-      ['Present Simple','Form: I/You/We/They + base verb | He/She/It + verb-s/es','Use: habits and routines; repeated actions; facts and general truths; schedules and timetables; permanent or long-term situations. Common words: always, usually, often, sometimes, rarely, never, every day, every week. Questions use do/does; negatives use do not/does not.','Positive: She studies English every day. | Negative: She does not study English on Fridays. | Question: Does she study English every day?'],
-      ['Present Continuous','Form: am/is/are + verb-ing','Use: actions happening now; temporary situations around the present; changing situations; repeated temporary actions, often with always. It can also describe fixed future arrangements. Common words: now, right now, at the moment, currently, today, this week.','Positive: She is studying now. | Negative: She is not studying now. | Question: Is she studying now?'],
-      ['Present Perfect','Form: have/has + past participle (V3)','Use: past actions with a present result; life experiences when the exact time is not important; actions in an unfinished time period; situations that started in the past and continue now. Common words: already, just, yet, ever, never, recently, so far, since, for. Do not normally use it with a finished past time such as yesterday or last year.','Positive: I have finished my homework. | Negative: I have not finished my homework. | Question: Have you finished your homework?'],
-      ['Present Perfect Continuous','Form: have/has been + verb-ing','Use: actions that started in the past and continue until now; or actions that recently stopped but have a visible present result. It emphasizes duration or activity. Common words: since, for, all day, lately, recently.','Positive: They have been studying for two hours. | Negative: They have not been studying for two hours. | Question: Have they been studying for two hours?']
+      ['Present Simple',
+       'Form: I/You/We/They + base verb | He/She/It + verb-s/es',
+       'Uses: habits and routines; repeated actions; facts and general truths; permanent or long-term situations; schedules and timetables. For he/she/it, add -s or -es (study → studies, watch → watches, go → goes). Use do/does for questions and do not/does not for negatives. Stative verbs such as know, like, believe and understand are usually used in the simple form.',
+       'Keywords: always, usually, often, sometimes, rarely, never, every day/week/year, on Mondays. Positive: She studies English every day. Negative: She does not study English on Fridays. Question: Does she study English every day? Short answer: Yes, she does. / No, she does not.'],
+      ['Present Continuous',
+       'Form: am/is/are + verb-ing',
+       'Uses: actions happening now; temporary situations around the present; changing or developing situations; repeated temporary actions, especially with always; fixed future arrangements. Spelling: make → making, run → running, lie → lying. Some stative verbs are normally not used in the continuous form.',
+       'Keywords: now, right now, at the moment, currently, today, this week, these days. Positive: She is studying now. Negative: She is not studying now. Question: Is she studying now? Short answer: Yes, she is. / No, she is not.'],
+      ['Present Perfect',
+       'Form: have/has + past participle (V3)',
+       'Uses: a past action with a present result; life experiences when the exact time is not important; actions in an unfinished time period; situations that started in the past and continue now. Do not normally use the present perfect with a finished past time such as yesterday, last year or in 2020.',
+       'Keywords: already, just, yet, ever, never, recently, lately, so far, until now, since, for. Positive: I have finished my homework. Negative: I have not finished my homework. Question: Have you finished your homework? Short answer: Yes, I have. / No, I have not.'],
+      ['Present Perfect Continuous',
+       'Form: have/has + been + verb-ing',
+       'Uses: an activity that started in the past and continues until now; or an activity that recently stopped but has a visible present result. It emphasizes duration or the activity itself. With state verbs, the present perfect simple is usually preferred.',
+       'Keywords: since, for, all day, all morning, lately, recently, how long. Positive: They have been studying for two hours. Negative: They have not been studying for two hours. Question: Have they been studying for two hours? Short answer: Yes, they have. / No, they have not.']
     ],
     Past:[
-      ['Past Simple','Form: subject + past form (V2) | regular verbs: -ed; irregular verbs have special forms','Use: completed actions in the past; a sequence of finished events; past habits or situations. Common words: yesterday, last night, last week, ago, in 2020, when I was young. Questions use did; negatives use did not.','Positive: I visited Tehran last week. | Negative: I did not visit Tehran last week. | Question: Did you visit Tehran last week?'],
-      ['Past Continuous','Form: was/were + verb-ing','Use: an action in progress at a specific past time; a longer action interrupted by a shorter action; two actions happening at the same time. Often used with when and while.','Positive: I was studying at 8 p.m. | Negative: I was not studying at 8 p.m. | Question: Were you studying at 8 p.m.?'],
-      ['Past Perfect','Form: had + past participle (V3)','Use: an action that happened before another past action or past time. It makes the order of two past events clear. Common words: before, after, by the time, already, just, never, until then.','Positive: She had left before I arrived. | Negative: She had not left before I arrived. | Question: Had she left before you arrived?'],
-      ['Past Perfect Continuous','Form: had been + verb-ing','Use: an activity that continued for a period before another past event or time. It emphasizes duration or the ongoing activity. Common words: for, since, all day, before, until, by the time.','Positive: He had been working for three hours before lunch. | Negative: He had not been working for three hours before lunch. | Question: Had he been working for three hours before lunch?']
+      ['Past Simple',
+       'Form: subject + past form (V2) | regular verbs: verb + -ed | irregular verbs have special forms',
+       'Uses: completed actions at a definite time in the past; a sequence of finished events; past habits or situations. In questions use did + base verb, not V2. In negatives use did not + base verb.',
+       'Keywords: yesterday, last night/week/year, ago, in 2020, when I was young. Positive: I visited Tehran last week. Negative: I did not visit Tehran last week. Question: Did you visit Tehran last week? Short answer: Yes, I did. / No, I did not.'],
+      ['Past Continuous',
+       'Form: was/were + verb-ing',
+       'Uses: an action in progress at a specific past time; a longer background action interrupted by a shorter action; two actions happening at the same time; setting the background in a story. Use when for an interrupting event and while for an action in progress.',
+       'Keywords: while, when, at 8 p.m., at that moment, all evening. Positive: I was studying at 8 p.m. Negative: I was not studying at 8 p.m. Question: Were you studying at 8 p.m.? Short answer: Yes, I was. / No, I was not.'],
+      ['Past Perfect',
+       'Form: had + past participle (V3)',
+       'Uses: an action that happened before another past action or past time. It helps make the order of two past events clear. The earlier event uses past perfect; the later event can use past simple. Common connectors include before, after and by the time.',
+       'Keywords: before, after, by the time, already, just, never, until then. Positive: She had left before I arrived. Negative: She had not left before I arrived. Question: Had she left before you arrived? Short answer: Yes, she had. / No, she had not.'],
+      ['Past Perfect Continuous',
+       'Form: had + been + verb-ing',
+       'Uses: an activity that continued for a period before another past event or time. It emphasizes duration or the ongoing activity and often explains a past result or situation. Compare it with past perfect simple, which emphasizes completion.',
+       'Keywords: for, since, all day, before, until, by the time. Positive: He had been working for three hours before lunch. Negative: He had not been working for three hours before lunch. Question: Had he been working for three hours before lunch? Short answer: Yes, he had. / No, he had not.']
     ],
     Future:[
-      ['Future Simple','Form: will + base verb','Use: predictions; promises; offers; spontaneous decisions made while speaking; future facts. Common words: tomorrow, next week, soon, later, I think, probably, maybe. Negatives use will not/won’t; questions use will + subject.','Positive: I will call you tomorrow. | Negative: I will not call you tomorrow. | Question: Will you call me tomorrow?'],
-      ['Future Continuous','Form: will be + verb-ing','Use: an action that will be in progress at a particular future time; an expected future activity; sometimes used to ask politely about someone’s plans. It focuses on an activity in progress, not its completed result.','Positive: I will be studying at 8 p.m. | Negative: I will not be studying at 8 p.m. | Question: Will you be studying at 8 p.m.?'],
-      ['Future Perfect','Form: will have + past participle (V3)','Use: an action that will be completed before a specific future time or another future event. Common words: by, by then, by the time, before. It answers the idea of what will be finished by a certain point.','Positive: She will have finished by Friday. | Negative: She will not have finished by Friday. | Question: Will she have finished by Friday?'],
-      ['Future Perfect Continuous','Form: will have been + verb-ing','Use: an action that will continue for a period up to a particular future time. It emphasizes duration. Common words: for, since, by the time, by next year, for two hours, for five years.','Positive: By June, I will have been learning English for a year. | Negative: By June, I will not have been learning English for a year. | Question: Will you have been learning English for a year by June?']
+      ['Future Simple',
+       'Form: will + base verb',
+       'Uses: predictions and opinions about the future; promises; offers; spontaneous decisions made while speaking; future facts. Use will not/won’t for negatives and will + subject for questions. For planned arrangements, English often uses other future forms such as present continuous.',
+       'Keywords: tomorrow, next week/month, soon, later, I think, probably, maybe, I am sure. Positive: I will call you tomorrow. Negative: I will not call you tomorrow. Question: Will you call me tomorrow? Short answer: Yes, I will. / No, I will not.'],
+      ['Future Continuous',
+       'Form: will be + verb-ing',
+       'Uses: an action that will be in progress at a particular future time; an expected activity as part of a normal plan; polite questions about someone’s plans. It focuses on an activity in progress rather than a completed result.',
+       'Keywords: this time tomorrow, at 8 p.m. tomorrow, all day tomorrow, next week at this time. Positive: I will be studying at 8 p.m. Negative: I will not be studying at 8 p.m. Question: Will you be studying at 8 p.m.? Short answer: Yes, I will. / No, I will not.'],
+      ['Future Perfect',
+       'Form: will have + past participle (V3)',
+       'Uses: an action that will be completed before a specific future time or another future event. The focus is on the result or completion by that future point. It is often used with by and by the time.',
+       'Keywords: by, by then, by the time, before, by Friday, by next year. Positive: She will have finished by Friday. Negative: She will not have finished by Friday. Question: Will she have finished by Friday? Short answer: Yes, she will. / No, she will not.'],
+      ['Future Perfect Continuous',
+       'Form: will have been + verb-ing',
+       'Uses: an activity that will continue for a period up to a particular future time. It emphasizes duration rather than completion. It is especially useful when answering “How long?” about a future point.',
+       'Keywords: for, since, by the time, by next year, for two hours, for five years. Positive: By June, I will have been learning English for a year. Negative: By June, I will not have been learning English for a year. Question: Will you have been learning English for a year by June? Short answer: Yes, I will. / No, I will not.']
     ]
   };
   function showGrammar(){
+    window.activeDictionaryTable='grammar';
+    updateDatasetLabels();
     loginPage.style.display='none';app.style.display='none';
     const g=document.getElementById('grammarApp');if(!g)return;
     g.style.display='block';
@@ -76,7 +115,7 @@
       document.body.appendChild(overlay);
       overlay.querySelector('#switchBasic').onclick=()=>selectDataset('dictionary',true);
       overlay.querySelector('#switch504').onclick=()=>selectDataset('dictionary_504',true);
-      overlay.querySelector('#switchGrammar').onclick=()=>{overlay.remove();showGrammar()};
+      overlay.querySelector('#switchGrammar').onclick=()=>{overlay.remove();window.activeDictionaryTable='grammar';selected=true;showAccess()};
       overlay.querySelector('#cancelSwitch').onclick=()=>overlay.remove();
       return;
     }
@@ -84,7 +123,7 @@
     chooser.setAttribute('data-access-ui','1');
     chooser.innerHTML='<p data-access-ui="1" style="margin:18px 0 8px;font-weight:700;color:var(--text)">Choose your word list</p><div data-access-ui="1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"><button type="button" id="basicDataset">📘 Basic Words</button><button type="button" id="dataset504" style="background:linear-gradient(135deg,#d59b18,#e8b43c)">📗 504 Words</button><button type="button" id="grammarDataset" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">📚 Grammar</button></div>';
     box.insertBefore(chooser,error);
-    document.getElementById('grammarBack')?.addEventListener('click',hideGrammar);
+    document.getElementById('grammarBack')?.addEventListener('click',()=>{hideGrammar();showDatasetChooser()});
     chooser.querySelector('#basicDataset').onclick=()=>selectDataset('dictionary',false);
     chooser.querySelector('#dataset504').onclick=()=>selectDataset('dictionary_504',false);
     chooser.querySelector('#grammarDataset').onclick=()=>{window.activeDictionaryTable='grammar';selected=true;showAccess()};
