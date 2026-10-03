@@ -21,6 +21,39 @@
     if(hero) hero.textContent='📖 '+name+' Dictionary';
   }
 
+  const grammarData={
+    Present:[
+      ['Present Simple','Form: subject + base verb (he/she/it: verb + s/es)','Use: habits, facts, routines, and repeated actions.','I study English every day.'],
+      ['Present Continuous','Form: am/is/are + verb-ing','Use: actions happening now or around the present time.','She is studying now.'],
+      ['Present Perfect','Form: have/has + past participle (V3)','Use: past actions connected to the present; experiences and unfinished time.','I have finished my homework.'],
+      ['Present Perfect Continuous','Form: have/has been + verb-ing','Use: actions that started in the past and continue or have a present result.','They have been studying for two hours.']
+    ],
+    Past:[
+      ['Past Simple','Form: subject + past form (V2)','Use: completed actions at a finished time in the past.','I visited Tehran last week.'],
+      ['Past Continuous','Form: was/were + verb-ing','Use: an action in progress at a specific time in the past.','I was studying at 8 p.m.'],
+      ['Past Perfect','Form: had + past participle (V3)','Use: an action completed before another past action.','She had left before I arrived.'],
+      ['Past Perfect Continuous','Form: had been + verb-ing','Use: an action continuing for a period before another past event.','He had been working for three hours before lunch.']
+    ],
+    Future:[
+      ['Future Simple','Form: will + base verb','Use: predictions, promises, decisions, and future facts.','I will call you tomorrow.'],
+      ['Future Continuous','Form: will be + verb-ing','Use: an action that will be in progress at a future time.','This time tomorrow, I will be studying.'],
+      ['Future Perfect','Form: will have + past participle (V3)','Use: an action that will be completed before a future time.','She will have finished by Friday.'],
+      ['Future Perfect Continuous','Form: will have been + verb-ing','Use: an action continuing up to a specific future time.','By June, I will have been learning English for a year.']
+    ]
+  };
+  function showGrammar(){
+    loginPage.style.display='none';app.style.display='none';
+    const g=document.getElementById('grammarApp');if(!g)return;
+    g.style.display='block';
+    const content=document.getElementById('grammarContent');
+    content.innerHTML=Object.entries(grammarData).map(([group,notes])=>'<section class="grammar-section"><h2>'+group+'</h2><div class="grammar-grid">'+notes.map(n=>'<article class="grammar-note"><h3>'+n[0]+'</h3><div class="formula">'+n[1]+'</div><p>'+n[2]+'</p><div class="example">'+n[3]+'</div></article>').join('')+'</div></section>').join('');
+    window.scrollTo(0,0);
+  }
+  function hideGrammar(){
+    const g=document.getElementById('grammarApp');if(g)g.style.display='none';
+    loginPage.style.display='grid';
+  }
+
   let mode='password';
   let selected=false;
 
@@ -39,19 +72,22 @@
       overlay.id='dictionarySwitcher';
       overlay.setAttribute('data-access-ui','1');
       overlay.style.cssText='position:fixed;inset:0;z-index:300;background:#0008;display:grid;place-items:center;padding:20px;backdrop-filter:blur(8px)';
-      overlay.innerHTML='<div class="login-box" style="width:min(520px,100%);margin:auto"><div class="logo">📚</div><h1>Switch Dictionary</h1><p>Choose which word list you want to use.</p><div style="display:grid;gap:12px;margin-top:22px"><button type="button" id="switchBasic">📘 Basic Words</button><button type="button" id="switch504" style="background:linear-gradient(135deg,#d59b18,#e8b43c)">📗 504 Words</button><button type="button" id="cancelSwitch" style="background:#475569">Cancel</button></div></div>';
+      overlay.innerHTML='<div class="login-box" style="width:min(520px,100%);margin:auto"><div class="logo">📚</div><h1>Switch Section</h1><p>Choose what you want to open.</p><div style="display:grid;gap:12px;margin-top:22px"><button type="button" id="switchBasic">📘 Basic Words</button><button type="button" id="switch504" style="background:linear-gradient(135deg,#d59b18,#e8b43c)">📗 504 Words</button><button type="button" id="switchGrammar" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">📚 Grammar</button><button type="button" id="cancelSwitch" style="background:#475569">Cancel</button></div></div>';
       document.body.appendChild(overlay);
       overlay.querySelector('#switchBasic').onclick=()=>selectDataset('dictionary',true);
       overlay.querySelector('#switch504').onclick=()=>selectDataset('dictionary_504',true);
+      overlay.querySelector('#switchGrammar').onclick=()=>{overlay.remove();showGrammar()};
       overlay.querySelector('#cancelSwitch').onclick=()=>overlay.remove();
       return;
     }
     const chooser=document.createElement('div');
     chooser.setAttribute('data-access-ui','1');
-    chooser.innerHTML='<p data-access-ui="1" style="margin:18px 0 8px;font-weight:700;color:var(--text)">Choose your word list</p><div data-access-ui="1" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><button type="button" id="basicDataset">📘 Basic Words</button><button type="button" id="dataset504" style="background:linear-gradient(135deg,#d59b18,#e8b43c)">📗 504 Words</button></div>';
+    chooser.innerHTML='<p data-access-ui="1" style="margin:18px 0 8px;font-weight:700;color:var(--text)">Choose your word list</p><div data-access-ui="1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"><button type="button" id="basicDataset">📘 Basic Words</button><button type="button" id="dataset504" style="background:linear-gradient(135deg,#d59b18,#e8b43c)">📗 504 Words</button><button type="button" id="grammarDataset" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">📚 Grammar</button></div>';
     box.insertBefore(chooser,error);
+    document.getElementById('grammarBack')?.addEventListener('click',hideGrammar);
     chooser.querySelector('#basicDataset').onclick=()=>selectDataset('dictionary',false);
     chooser.querySelector('#dataset504').onclick=()=>selectDataset('dictionary_504',false);
+    chooser.querySelector('#grammarDataset').onclick=showGrammar;
     error.textContent='';
     selected=false;
   }
@@ -190,6 +226,10 @@
   const style=document.createElement('style');
   style.textContent='.guest-mode .word-actions{display:none!important}.guest-mode #sort{display:none!important}.guest-mode #word,.guest-mode #meaning{pointer-events:none!important;user-select:none!important}#dictionarySwitcher .login-box{animation:rise .25s ease}';
   document.head.appendChild(style);
+
+  document.getElementById('grammarBack')?.addEventListener('click',hideGrammar);
+  document.getElementById('grammarBasic')?.addEventListener('click',()=>{hideGrammar();selectDataset('dictionary',false)});
+  document.getElementById('grammar504')?.addEventListener('click',()=>{hideGrammar();selectDataset('dictionary_504',false)});
 
   // Always choose the dictionary first when the site opens.
   localStorage.removeItem('star_dictionary_guest_v1');
