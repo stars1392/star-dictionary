@@ -176,14 +176,14 @@
 
   async function enterGuest(){
     loginPage.style.display='none';app.style.display='block';document.body.classList.add('guest-mode');
-    await cloudLoad();lockEditing();
+    await cloudLoad();lockEditing();addSwitchButton();
     const s=document.getElementById('syncStatus');
     if(s){s.textContent='👤 Guest mode: viewing and searching only';s.className='sync-status sync-ok';s.style.display='block'}
   }
   async function enterPassword(){
     if(document.getElementById('accessPassword').value!==PASSWORD){error.textContent='Incorrect password';return}
     loginPage.style.display='none';app.style.display='block';document.body.classList.remove('guest-mode');
-    await cloudLoad();unlockEditing();document.getElementById('word')?.focus();
+    await cloudLoad();unlockEditing();addSwitchButton();document.getElementById('word')?.focus();
   }
 
   function addSwitchButton(){
