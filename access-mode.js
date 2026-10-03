@@ -87,7 +87,7 @@
     document.getElementById('grammarBack')?.addEventListener('click',hideGrammar);
     chooser.querySelector('#basicDataset').onclick=()=>selectDataset('dictionary',false);
     chooser.querySelector('#dataset504').onclick=()=>selectDataset('dictionary_504',false);
-    chooser.querySelector('#grammarDataset').onclick=showGrammar;
+    chooser.querySelector('#grammarDataset').onclick=()=>{window.activeDictionaryTable='grammar';selected=true;showAccess()};
     error.textContent='';
     selected=false;
   }
