@@ -160,6 +160,7 @@
   }
 
   async function selectDataset(table,inside){
+    const wasGuest=document.body.classList.contains('guest-mode');
     window.activeDictionaryTable=table;
     localStorage.setItem('star_active_dictionary',table);
     selected=true;
@@ -169,6 +170,12 @@
       const overlay=document.getElementById('dictionarySwitcher');if(overlay)overlay.remove();
       dictionary=[];localWords=JSON.parse(localStorage.getItem(datasetStorageKey())||'[]');
       await cloudLoad();
+      if(wasGuest){
+        document.body.classList.add('guest-mode');
+        lockEditing();
+      }else{
+        unlockEditing();
+      }
       return;
     }
     showAccess();
