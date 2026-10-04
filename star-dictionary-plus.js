@@ -50,6 +50,13 @@
   function wordOfDay(){const list=$('list');if(!list||!window.dictionary?.length)return;const d=new Date();const idx=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%window.dictionary.length;const x=window.dictionary[idx];const box=$('sdWordOfDay');if(box){box.style.display='block';box.innerHTML=`<b>🌟 Word of the Day</b> — <span dir="ltr">${String(x.word).replace(/</g,'&lt;')}</span> <span class="muted">${x.meanings?.join('، ')||''}</span>`}}
   function observe(){const list=$('list');if(!list)return;new MutationObserver(()=>{decorateWords();wordOfDay()}).observe(list,{childList:true,subtree:true});decorateWords();wordOfDay()}
   function shortcuts(){document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key.toLowerCase()==='k'){e.preventDefault();const s=$('search');if(s){s.focus();s.select()}}if(e.key==='Escape'&&document.activeElement===$('search')){if(typeof window.clearSearch==='function')window.clearSearch();else $('search').value='';}})}
-  function boot(){makeModal();patchLogout();patchTheme();addTools();shortcuts();observe();}
+  function simplifyLoginButtons(){
+    document.querySelectorAll('.login-modes button, #passwordMode, #guestMode, #passwordLogin, #guestLogin').forEach(b=>{
+      const t=(b.textContent||'').toLowerCase();
+      if(t.includes('password')||t.includes('رمز')) b.textContent='Password';
+      else if(t.includes('guest')||t.includes('مهمان')) b.textContent='Guest';
+    });
+  }
+  function boot(){makeModal();patchLogout();patchTheme();addTools();shortcuts();observe();simplifyLoginButtons();new MutationObserver(simplifyLoginButtons).observe(document.body,{childList:true,subtree:true});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
