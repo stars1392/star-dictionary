@@ -111,7 +111,7 @@
       overlay.id='dictionarySwitcher';
       overlay.setAttribute('data-access-ui','1');
       overlay.style.cssText='position:fixed;inset:0;z-index:300;background:#0008;display:grid;place-items:center;padding:20px;backdrop-filter:blur(8px)';
-      overlay.innerHTML='<div class="login-box" style="width:min(520px,100%);margin:auto"><div class="logo">📚</div><h1>Switch Section</h1><p>Choose what you want to open.</p><div style="display:grid;gap:12px;margin-top:22px"><button type="button" id="switchBasic">📘 Basic Words</button><button type="button" id="switch504" style="background:linear-gradient(135deg,#d59b18,#e8b43c)">📗 504 Words</button><button type="button" id="switchGrammar" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">📚 Grammar</button><button type="button" id="cancelSwitch" style="background:#475569">Cancel</button></div></div>';
+      overlay.innerHTML='<div class="login-box" style="width:min(520px,100%);margin:auto"><div class="logo">📚</div><h1>Switch Section</h1><p>Choose what you want to open.</p><div style="display:grid;gap:12px;margin-top:22px"><button type="button" id="switchBasic">📘 Basic Words</button><button type="button" id="switch504">📗 504 Words</button><button type="button" id="switchGrammar">📚 Grammar</button><button type="button" id="cancelSwitch" style="background:#475569">Cancel</button></div></div>';
       document.body.appendChild(overlay);
       overlay.querySelector('#switchBasic').onclick=()=>selectDataset('dictionary',true);
       overlay.querySelector('#switch504').onclick=()=>selectDataset('dictionary_504',true);
