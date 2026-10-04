@@ -53,8 +53,8 @@
   function simplifyLoginButtons(){
     document.querySelectorAll('.login-modes button, #passwordMode, #guestMode, #passwordLogin, #guestLogin, #guestBtn').forEach(b=>{
       const t=(b.textContent||'').toLowerCase();
-      if(t.includes('password')||t.includes('رمز')) b.textContent='Password';
-      else if(t.includes('guest')||t.includes('مهمان')) b.textContent='Guest';
+      const next=(t.includes('password')||t.includes('رمز'))?'Password':(t.includes('guest')||t.includes('مهمان'))?'Guest':null;
+      if(next && b.textContent!==next) b.textContent=next;
     });
   }
   function boot(){makeModal();patchLogout();patchTheme();addTools();shortcuts();observe();simplifyLoginButtons();new MutationObserver(simplifyLoginButtons).observe(document.body,{childList:true,subtree:true});}
