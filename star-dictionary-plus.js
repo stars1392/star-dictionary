@@ -7,7 +7,9 @@
   const $=id=>document.getElementById(id);
   const style=document.createElement('style');
   style.textContent=`
-    .sdplus{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.sdplus button{flex:1;min-width:120px}
+    .sdplus{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    #basicDataset,#dataset504,#grammarDataset,#switchBasic,#switch504,#switchGrammar{background:linear-gradient(135deg,var(--primary),var(--primary2))!important}
+.sdplus button{flex:1;min-width:120px}
     .guest-banner{margin:10px 0;padding:10px 13px;border-radius:13px;background:#fff4d6;color:#765300;font-size:12px;text-align:center}.dark .guest-banner,body.dark .guest-banner{background:#3a3019;color:#f7d879}
     .favorite-btn{background:transparent!important;color:#d59b18!important;box-shadow:none!important;padding:5px 8px!important;font-size:18px!important}.favorite-btn.active{filter:drop-shadow(0 2px 4px #d59b1855)}
     .word-of-day{background:linear-gradient(135deg,#fff8dc,#fff);border:1px solid #e8c45a;padding:14px 16px;border-radius:18px;margin:10px 0;display:none}.dark .word-of-day,body.dark .word-of-day{background:linear-gradient(135deg,#332c18,#1b292b)}
