@@ -141,8 +141,9 @@
 
     const modeWrap=document.createElement('div');
     modeWrap.setAttribute('data-access-ui','1');
-    modeWrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 10px';
-    modeWrap.innerHTML='<button type="button" id="passwordMode">🔐 Login with Password</button><button type="button" id="guestBtn" style="background:linear-gradient(135deg,#475569,#64748b)">👤 Guest Login</button>';
+    modeWrap.className='access-mode-cards';
+    modeWrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 14px';
+    modeWrap.innerHTML='<button type="button" id="passwordMode" class="access-mode-card password-card"><span class="access-symbol">🔐</span><b>Password</b><small>Full access</small></button><button type="button" id="guestBtn" class="access-mode-card guest-card"><span class="access-symbol">👤</span><b>Guest</b><small>View &amp; search</small></button>';
     box.insertBefore(modeWrap,error);
 
     const passArea=document.createElement('div');
