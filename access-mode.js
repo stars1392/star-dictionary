@@ -162,8 +162,8 @@
       passArea.style.display=m==='password'?'block':'none';
       guestNotice.style.display=m==='guest'?'block':'none';
       error.textContent='';
-      document.getElementById('passwordMode').style.opacity=m==='password'?'1':'.55';
-      document.getElementById('guestBtn').style.opacity=m==='guest'?'1':'.55';
+      document.getElementById('passwordMode').classList.toggle('selected',m==='password');
+      document.getElementById('guestBtn').classList.toggle('selected',m==='guest');
     }
 
     document.getElementById('passwordMode').onclick=()=>{setMode('password');document.getElementById('accessPassword').focus()};
@@ -274,7 +274,7 @@
   window.showDictionaryChooser=()=>showDatasetChooser({inside:true});
 
   const style=document.createElement('style');
-  style.textContent='.guest-mode .word-actions{display:none!important}.guest-mode #sort{display:none!important}.guest-mode #word,.guest-mode #meaning{pointer-events:none!important;user-select:none!important}#dictionarySwitcher .login-box{animation:rise .25s ease}';
+  style.textContent='.guest-mode .word-actions{display:none!important}.guest-mode #sort{display:none!important}.guest-mode #word,.guest-mode #meaning{pointer-events:none!important;user-select:none!important}#dictionarySwitcher .login-box{animation:rise .25s ease}.access-mode-card{min-width:0;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 7px!important;border:2px solid #b7d9d0!important;border-radius:20px!important;background:linear-gradient(150deg,#fff,#effaf5)!important;color:#14534d!important;box-shadow:0 6px 18px #0f766e12!important;transition:transform .2s,border-color .2s,box-shadow .2s!important}.access-mode-card:hover{transform:translateY(-3px);box-shadow:0 12px 24px #0f766e20!important}.access-mode-card.selected{border-color:#0f766e!important;background:linear-gradient(145deg,#dff7ed,#c9f0df)!important;box-shadow:0 0 0 3px #0f766e18,0 10px 22px #0f766e18!important}.access-symbol{font-size:31px;line-height:1.2}.access-mode-card b{font-size:16px;font-weight:800;color:#14534d}.access-mode-card small{font-size:11px;font-weight:600;color:#53756e}#accessEnter{min-height:46px;border-radius:14px!important;font-size:15px}#accessPassword{border:1.5px solid #b7d9d0}@media(max-width:380px){.access-mode-card{min-height:122px;padding:10px 5px!important}.access-symbol{font-size:27px}}';
   document.head.appendChild(style);
 
   document.getElementById('grammarBack')?.addEventListener('click',hideGrammar);
