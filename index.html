@@ -74,7 +74,7 @@ function escapeHtml(t){let d=document.createElement("div");d.textContent=t;retur
       img.setAttribute('role','img');
       img.draggable=false;
       img.loading='lazy';
-      img.src='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="8" fill="#e8f5ed"/><g fill="none" stroke="#39856b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9c4-2 7-1 10 1v13c-3-2-6-3-10-1z"/><path d="M26 9c-4-2-7-1-10 1v13c3-2 6-3 10-1z"/><path d="M16 10v13"/></g><path d="m23 3 1.5 3 3.3.5-2.4 2.3.6 3.3-3-1.6-3 1.6.6-3.3-2.4-2.3 3.3-.5z" fill="#d4a72c" stroke="#b88b18" stroke-width=".6"/></svg>');
+      img.src='data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="8" fill="#ffffff" stroke="#39856b" stroke-width="1.2"/><g fill="none" stroke="#39856b" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 9c4-2 7-1 10.5 1v13c-3.5-2-6.5-3-10.5-1z"/><path d="M26.5 9c-4-2-7-1-10.5 1v13c3.5-2 6.5-3 10.5-1z"/><path d="M16 10v13"/></g><path d="M10 6h12" stroke="#39856b" stroke-width="1.6" stroke-linecap="round"/></svg>');
       img.onerror=function(){this.style.display='none';};
       fragment.appendChild(img);
       changed=true;
