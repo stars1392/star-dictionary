@@ -4,6 +4,19 @@
   const FAV_KEY='star_dictionary_favorites_v1';
   const getFav=()=>JSON.parse(localStorage.getItem(FAV_KEY)||'[]');
   const setFav=a=>localStorage.setItem(FAV_KEY,JSON.stringify(a));
+  let favoritesOnly=false;
+  const cleanWord=s=>String(s||'').trim().replace(/^\\d+\\s*[—-]\\s*/, '').trim();
+  const isFav=(word,favs=getFav())=>favs.some(x=>cleanWord(x).toLocaleLowerCase()===cleanWord(word).toLocaleLowerCase());
+  function showFavorites(){
+    favoritesOnly=true;
+    const s=$('search'); if(s)s.value='';
+    const fav=getFav();
+    const data=(typeof dictionary!=='undefined'&&Array.isArray(dictionary)?dictionary:[]).filter(x=>isFav(x.word,fav));
+    if(typeof window.showWords==='function')window.showWords(data);
+    const b=$('sdFavorites');if(b){b.textContent='⭐ All Words';b.title='Return to all words'}
+    if(!data.length&&typeof toast==='function')toast('No favorite words yet');
+  }
+  function showAllWords(){favoritesOnly=false;const b=$('sdFavorites');if(b){b.textContent='⭐ Favorites';b.title='Show favorite words'}if(typeof window.showWords==='function')window.showWords();}
   const $=id=>document.getElementById(id);
   const style=document.createElement('style');
   style.textContent=`
@@ -41,11 +54,11 @@
 
   function addTools(){
     const header=document.querySelector('.header-actions');if(!header||$('sdMoreBtn'))return;const b=document.createElement('button');b.id='sdMoreBtn';b.className='icon-btn';b.textContent='⚙️';b.title='More tools';b.onclick=()=>{$('sdPlusModal').classList.add('open')};header.insertBefore(b,header.firstChild);
-    const card=document.querySelector('.container > .card:first-child');if(card&&!$('sdPlusActions')){const d=document.createElement('div');d.id='sdPlusActions';d.className='sdplus';d.innerHTML='<button id="sdBackup">📤 Backup</button><button id="sdFavorites">⭐ Favorites</button>';card.appendChild(d);$('sdBackup').onclick=()=>$('sdExport').click();$('sdFavorites').onclick=()=>{const s=$('search');if(s){s.value='★';if(typeof window.searchWord==='function')window.searchWord()}}}
+    const card=document.querySelector('.container > .card:first-child');if(card&&!$('sdPlusActions')){const d=document.createElement('div');d.id='sdPlusActions';d.className='sdplus';d.innerHTML='<button id="sdBackup">📤 Backup</button><button id="sdFavorites">⭐ Favorites</button>';card.appendChild(d);$('sdBackup').onclick=()=>$('sdExport').click();$('sdFavorites').title='Show favorite words';$('sdFavorites').onclick=()=>favoritesOnly?showAllWords():showFavorites()}
     const list=$('list');if(list&&!$('sdWordOfDay')){const w=document.createElement('div');w.id='sdWordOfDay';w.className='word-of-day';list.parentNode.insertBefore(w,list)}
   }
   function decorateWords(){
-    const list=$('list');if(!list)return;const fav=getFav();list.querySelectorAll('.word').forEach((el,i)=>{if(el.querySelector('.favorite-btn'))return;const title=el.querySelector('h3');if(!title)return;const word=title.textContent.trim();const actions=el.querySelector('.word-actions');if(!actions)return;const b=document.createElement('button');b.className='favorite-btn '+(fav.includes(word)?'active':'');b.title='Favorite';b.textContent=fav.includes(word)?'★':'☆';b.onclick=e=>{e.stopPropagation();let a=getFav();a=a.includes(word)?a.filter(x=>x!==word):[...a,word];setFav(a);b.classList.toggle('active',a.includes(word));b.textContent=a.includes(word)?'★':'☆';toast(a.includes(word)?'⭐ Added to favorites':'Removed from favorites')};actions.prepend(b)})
+    const list=$('list');if(!list)return;const fav=getFav();list.querySelectorAll('.word').forEach((el,i)=>{if(el.querySelector('.favorite-btn'))return;const title=el.querySelector('h3');if(!title)return;const word=cleanWord(title.textContent);const actions=el.querySelector('.word-actions');if(!actions)return;const b=document.createElement('button');b.className='favorite-btn '+(isFav(word,fav)?'active':'');b.title='Favorite';b.textContent=isFav(word,fav)?'★':'☆';b.onclick=e=>{e.stopPropagation();let a=getFav();const already=isFav(word,a);a=already?a.filter(x=>cleanWord(x).toLocaleLowerCase()!==word.toLocaleLowerCase()):[...a,word];setFav(a);b.classList.toggle('active',!already);b.textContent=!already?'★':'☆';toast(!already?'⭐ Added to favorites':'Removed from favorites');if(favoritesOnly)showFavorites()};actions.prepend(b)})
   }
   function wordOfDay(){const list=$('list');if(!list||!window.dictionary?.length)return;const d=new Date();const idx=(d.getFullYear()*372+d.getMonth()*31+d.getDate())%window.dictionary.length;const x=window.dictionary[idx];const box=$('sdWordOfDay');if(box){box.style.display='block';box.innerHTML=`<b>🌟 Word of the Day</b> — <span dir="ltr">${String(x.word).replace(/</g,'&lt;')}</span> <span class="muted">${x.meanings?.join('، ')||''}</span>`}}
   function observe(){const list=$('list');if(!list)return;new MutationObserver(()=>{decorateWords();wordOfDay()}).observe(list,{childList:true,subtree:true});decorateWords();wordOfDay()}
