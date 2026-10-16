@@ -121,7 +121,7 @@
     }
     const chooser=document.createElement('div');
     chooser.setAttribute('data-access-ui','1');
-    chooser.innerHTML='<p data-access-ui="1" style="margin:18px 0 8px;font-weight:700;color:var(--text)">Choose your word list</p><div data-access-ui="1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"><button type="button" id="basicDataset">📘 Basic Words</button><button type="button" id="dataset504" style="background:linear-gradient(135deg,#d59b18,#e8b43c)">📗 504 Words</button><button type="button" id="grammarDataset" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">📚 Grammar</button></div>';
+    chooser.innerHTML='<div data-access-ui="1" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"><button type="button" id="basicDataset">Words</button><button type="button" id="dataset504" style="background:linear-gradient(135deg,#d59b18,#e8b43c)">504</button><button type="button" id="grammarDataset" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">Grammar</button></div>';
     box.insertBefore(chooser,error);
     document.getElementById('grammarBack')?.addEventListener('click',()=>{hideGrammar();showDatasetChooser()});
     chooser.querySelector('#basicDataset').onclick=()=>selectDataset('dictionary',false);
