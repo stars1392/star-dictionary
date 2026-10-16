@@ -65,6 +65,9 @@ function escapeHtml(t){let d=document.createElement("div");d.textContent=t;retur
     const art={
       books:line+'<path d="M4 9l7-2 5 2v15l-5-2-7 2z" fill="#d9f4df"/><path d="M16 9l5-2 7 2v15l-7-2-5 2z" fill="#fff"/><path d="M16 9v15M7 12l5-1M7 16l5-1M20 12l5 1M20 16l5 1"/></g>',
       book:line+'<path d="M5 8c4-2 7-1 11 1v15c-4-2-7-3-11-1z" fill="#d9f4df"/><path d="M27 8c-4-2-7-1-11 1v15c4-2 7-3 11-1z" fill="#fff"/><path d="M16 9v15"/></g>',
+      bookBlue:line+'<path d="M8 5h16a2 2 0 0 1 2 2v20H10a2 2 0 0 1-2-2z" fill="#d9f4df"/><path d="M12 10h10M12 14h10M12 18h7M8 8h-2v17a2 2 0 0 0 2 2"/></g>',
+      bookGreen:line+'<path d="M7 5h16a3 3 0 0 1 3 3v19H10a3 3 0 0 1-3-3z" fill="#fff"/><path d="M7 5v19a3 3 0 0 0 3 3h16M12 10h9M12 14h9M12 18h6"/></g>',
+      notebook:line+'<rect x="8" y="5" width="17" height="22" rx="2" fill="#d9f4df"/><path d="M12 5v22M5 9h3M5 14h3M5 19h3M15 11h6M15 16h6M15 21h4"/></g>',
       bookmark:line+'<path d="M9 5h14v22l-7-5-7 5z" fill="#d9f4df"/><path d="M12 10h8M12 14h8"/></g>',
       moon:line+'<path d="M22 5a11 11 0 1 0 5 19A12 12 0 0 1 22 5z" fill="#d9f4df"/><path d="M7 8h.1M5 16h.1"/></g>',
       sun:line+'<circle cx="16" cy="16" r="6" fill="#d9f4df"/><path d="M16 4v4M16 24v4M4 16h4M24 16h4M7.5 7.5l3 3M21.5 21.5l3 3M24.5 7.5l-3 3M10.5 21.5l-3 3"/></g>',
@@ -86,7 +89,12 @@ function escapeHtml(t){let d=document.createElement("div");d.textContent=t;retur
     };
     const code=Array.from(emoji,c=>c.codePointAt(0).toString(16)).join('-');
     let key='generic';
-    if(/[📚📖📘📗📙]/u.test(emoji))key='books';
+    if(emoji==='📚')key='books';
+    else if(emoji==='📖')key='book';
+    else if(emoji==='📘')key='bookBlue';
+    else if(emoji==='📗')key='bookGreen';
+    else if(emoji==='📙'||emoji==='📓'||emoji==='📒')key='notebook';
+    else if(emoji==='📕')key='bookmark';
     else if(/[🌙🌛🌜🌚]/u.test(emoji))key='moon';
     else if(/[☀️🌞]/u.test(emoji))key='sun';
     else if(/[☁️🌥️🌤️🌦️]/u.test(emoji))key='cloud';
@@ -94,7 +102,8 @@ function escapeHtml(t){let d=document.createElement("div");d.textContent=t;retur
     else if(/[🔎🔍]/u.test(emoji))key='search';
     else if(/[✏️🖊️🖋️]/u.test(emoji))key='pencil';
     else if(/[🗑️🚮]/u.test(emoji))key='trash';
-    else if(/[🔐🔒🔑]/u.test(emoji))key='lock';
+    else if(emoji==='🔐'||emoji==='🔒')key='lock';
+    else if(emoji==='🔑')key='bookmark';
     else if(/[👤👥🧑👨👩]/u.test(emoji))key='user';
     else if(/[⚠️🚨]/u.test(emoji))key='warning';
     else if(/[⭐🌟✨💫]/u.test(emoji))key='star';
